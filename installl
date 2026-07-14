@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+set -e
+
+CONFIG_PATH="$HOME/.config/hypr/hyprland.conf"
+INSTALL_PATH="$HOME/.local/bin/tempd"
+
+echo "Starting installation..."
+sleep 2
+
+echo "Checking Hyprland config [1]"
+
+if [[ -f "$CONFIG_PATH" ]]; then
+    echo "done"
+else
+    echo "ERROR: Hyprland config not found"
+    exit 1
+fi
+
+
+echo "Compiling tempd [2]"
+
+if cargo build --release; then
+    echo "done"
+else
+    echo "ERROR: failed to compile"
+    exit 2
+fi
+
+
+echo "Installing binary [3]"
+
+mkdir -p "$HOME/.local/bin"
+
+if cp target/release/tempd "$INSTALL_PATH"; then
+    chmod +x "$INSTALL_PATH"
+    echo "done"
+else
+    echo "ERROR: failed to install binary"
+    exit 3
+fi
+
+
+echo "Adding startup entry [4]"
+
+if grep -q "tempd" "$CONFIG_PATH"; then
+    echo "startup entry already exists"
+else
+    echo "" >> "$CONFIG_PATH"
+    echo "exec-once = $INSTALL_PATH" >> "$CONFIG_PATH"
+    echo "done"
+fi
+
+
+read -p "Restart Hyprland now? (y/N): " confirm
+
+if [[ "$confirm" == "y" || "$confirm" == "yes" ]]; then
+    echo "Restarting Hyprland..."
+    hyprctl dispatch exit
+else
+    echo "Installation complete. Restart Hyprland manually when ready."
+fi
