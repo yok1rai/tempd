@@ -25,8 +25,8 @@ it is a simple background tool that changes the screen temperature over time
 there are 3 stages
 
 - **Day:** 7:00 AM - 12:00 PM
-- **Afternoon:** 12:00 PM - 7:00 PM
-- **Night:** 7:00 PM - 7:00 AM
+- **Afternoon:** 12:00 PM - 9:00 PM
+- **Night:** 9:00 PM - 7:00 AM
 
 ## how to install
 
@@ -89,6 +89,20 @@ $ echo -e "\nexec-once = /home/$USER/.local/bin/tempd" >> ~/.config/hypr/hyprlan
 ```bash
 $ hyprctl dispatch exit
 ```
+
+## Config
+
+Config file is located at `~/.config/tempd/config.toml`, there are few options u can change
+
+|option|desc|default|
+|:-----|:---|:------|
+|day_k|temperature for day|7000|
+|afternoon_k|temperature for afternoon|6500|
+|night_k||temperature for night|5000|
+|interval|how often program checks the time|30|
+|day_start|when day starts|7|
+|afternoon_start|when afternoon starts|12|
+|night_start|when night starts|19|
 
 ### license
 
